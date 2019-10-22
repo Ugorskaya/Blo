@@ -17,13 +17,7 @@
 			<block type="logic_compare"></block>
 			<block type="input_text"></block>
 			<block type="answer_weight"></block>
-
-
-			
-			
 			<block type="lists_answer"> <mutation items_answer="1"></mutation></mutation></block>
-			
-			
 		</category>
 
 		<category name="Случайные числа">
@@ -86,15 +80,21 @@
 		init: function() {
 			this.setColour(256)
 			this.appendDummyInput()
-				.appendField("Получение сообщения от человека");	
-			this.setOutput(true, 'text');
+        .appendField("Событие получения сообщения в боте");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
 
 		}
 	};
 	//описание кода блока ввода текста
 	Blockly.Python['input_text'] = function(block) {
-		var code_input_text = "input('введите сообщение')"
-		return[code_input_text, Blockly.Python.ORDER_NONE]; 
+    var code_input_text = "from vk_api.longpoll import VkLongPoll, VkEventType\n" + "longpoll = VkLongPoll(vk_session)\n"+"vk = vk_session.get_api()\n" + "for event in longpoll.listen():\n" + " if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:\n" 
+
+
+
+    
+		//var code_input_text = "input('введите сообщение')"
+		return code_input_text; 
 	}
 
 
