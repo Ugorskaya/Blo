@@ -273,7 +273,7 @@ Blockly.Python['answer_weight'] = function(block) {
 Blockly.Python['vk_api'] = function(block) {
   var value_token = Blockly.Python.valueToCode(block, 'token', Blockly.Python.ORDER_ATOMIC);
   // TODO: Assemble Python into code variable.
-  var code = "import requests\n" + "import vk_api\n"+"vk_session = vk_api.VkApi(token=" +value_token+"\n";
+  var code = "import requests\n" + "import vk_api\n"+"vk_session = vk_api.VkApi(token=" +value_token+")\n";
   
   return code;
 };
