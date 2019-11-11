@@ -478,8 +478,8 @@
         if (localStorage.getItem('server_ip')!=null){
             var server_ip = localStorage.getItem('server_ip');
         }
-
-        var dataStr = "data:text/python;charset=utf-8," +  "from random import choices\n"+Blockly.Python.workspaceToCode(workspace);
+        var code = Blockly.Python.workspaceToCode(workspace);
+        var dataStr = "data:text/python;charset=utf-8," +  "from random import choices\n" + code;
         var downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
         downloadAnchorNode.setAttribute("download", "answer" + ".py");
