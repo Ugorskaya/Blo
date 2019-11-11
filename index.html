@@ -479,7 +479,7 @@
             var server_ip = localStorage.getItem('server_ip');
         }
 
-        var dataStr = "data:text/python;charset=utf-8," +  "from random import choices\n"+document.getElementById('code_area').value;
+        var dataStr = "data:text/python;charset=utf-8," +  "from random import choices\n"+Blockly.Python.workspaceToCode(workspace);
         var downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
         downloadAnchorNode.setAttribute("download", "answer" + ".py");
