@@ -375,68 +375,37 @@
     };
 
     //обработчик блока ответов с мутацией
-    Blockly.Python['lists_answer'] = function(block){
-      var b=Array(block.itemCount_);
+        Blockly.Python['lists_answer'] = function(block){
+      
       var Array_Answer=[];
       var Array_Weight=[];
+      console.log(this.itemCount_);
 
-      for(i=0;i<block.itemCount_;i++){
+      var array1 = this.getChildren();
 
-        b[i]=Blockly.Python.valueToCode(block,"Answer"+i,Blockly.Python.ORDER_NONE);
-        
-          if( b[i].indexOf(",")>0){
-            //console.log(b[i].indexOf("["))
-            if (b[i].indexOf("[")>=0){
-              Array_Answer.push(b[i].slice(0, b[i].indexOf("]")+1));
-              if (b[i].slice(b[i].indexOf("],")+2).length>0){ 
-                Array_Weight.push(b[i].slice(b[i].indexOf("],")+2));
-              }
-              else {
-                Array_Weight.push("0.1");              
-              }}
-            else{
-              Array_Answer.push(b[i].slice(0, b[i].indexOf(",")));
-              if (b[i].slice(b[i].indexOf(",")+1).length>0){ 
-                Array_Weight.push(b[i].slice(b[i].indexOf(",")+1));
-              }
-              else {
-                Array_Weight.push("0.1");              
-              }
 
-            }
-          }
-         
+      if(block.itemCount_>1){
+     
+        array1.forEach(function(element,i) {
           
-          else{
-            Array_Answer.push(b[i]);
-            Array_Weight.push("0.1");
-          }
-       }
-        //функция рандомного ответа на питоне
-      /*var codepercentageChance = "import random\n"+
-      "def percentageChance(values, chances):\n"+
-          "   pool=[]\n"+
-          "   for i in range(len(chances)):\n"+
-            "      for i2 in range(chances[i]):\n"+
-            "         pool.append(values[i])\n"+
-          "   swap = random.randint(0,len(pool)-1)\n"+
-          "   return (pool[swap])\n"
-        //"percentageChance(["+Array_Answer+"],["+Array_Weight+"])"*/
-      //var code = "vk.messages.send(user_id=event.user_id, message=percentageChance(["+Array_Answer+"],["+Array_Weight+"]))" 
-      /*if  (CountAnswer==1) {
-        var codereturn = "vk.messages.send(user_id=event.user_id, message="+Array_Answer+")\n" ;
+          if(element.type=="text" || element.type=="lists_create_with"){
+            Array_Answer.push(Blockly.Python.valueToCode(block,"Answer"+i,Blockly.Python.ORDER_NONE));
+            Array_Weight.push("0.5");
+          }else if(element.type=="answer_weight"){
+            Array_Answer.push(Blockly.Python.valueToCode(element,"answer",Blockly.Python.ORDER_NONE));
+            if(Blockly.Python.valueToCode(element,"weight",Blockly.Python.ORDER_NONE)!=""){
+              Array_Weight.push(Blockly.Python.valueToCode(element,"weight",Blockly.Python.ORDER_NONE));
+            }else{Array_Weight.push("0.5");}
+        }
+
+        });
+        var text = "text = choices(["+Array_Answer+"],["+Array_Weight+"])[0]\n";
+
       }else{
-        var codereturn = "vk.messages.send(user_id=event.user_id, message=random.choice(["+Array_Answer+"],["+Array_Weight+"]))\n" ;
-      }*/
-
-
-      var text = "text = choices(["+Array_Answer+"],["+Array_Weight+"])[0]\n"
-      var codereturn = text +"return text\n";
-
+         var text ="text = "+ Blockly.Python.valueToCode(block,"Answer"+0,Blockly.Python.ORDER_NONE) +";\n";
+      }
       
-      //return "["+Array_Answer+"]"+"["+Array_Weight+"]" 
-      //return "percentageChance(["+Array_Answer+"],["+Array_Weight+"])";
-      //return codepercentageChance + code
+      var codereturn = text +"return text\n";
       return codereturn;
     }
    
