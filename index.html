@@ -1,6 +1,4 @@
 <head>
-  <meta charset="utf-8">
-  <title>Block VI Creator</title>
   <script src="blockly_compressed.js"></script> <!--импорт библиотеки ядра Blockly-->
   <script src="blocks_compressed.js"></script> <!--импорт библиотеки основных блоков-->
   <script src="msg/js/ru.js"></script> <!--импорт библиотеки сообщений-->
@@ -22,6 +20,7 @@
     <category name="VK">
       <block type="vk_api"></block><!--присвоение токена-->
       <block type="procedures_answer"></block><!--получение сообщения-->
+      
       <block type="input_text1"></block><!--переменная с сообщением-->
     </category> 
     
@@ -56,7 +55,7 @@
  
   
   <script> 
-
+    var CountAnswer;
     //настройки правой части окна
     var workspace = Blockly.inject('blocklyDiv',
       {toolbox: document.getElementById('toolbox'),
@@ -113,7 +112,7 @@
           .setCheck(null)
           .appendField("делает");
         this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
+        //this.setNextStatement(true, null);
         this.setColour(200)
       this.setTooltip("Функция принимающая на вход переменную сообщения из вк");
       }
@@ -185,7 +184,7 @@
     Blockly.Python['vk_api'] = function(block) {
       var value_token = Blockly.Python.valueToCode(block, 'token', Blockly.Python.ORDER_ATOMIC);
       //var code = "import requests\n" + "import vk_api\n"+"vk_session = vk_api.VkApi(token=" +value_token+")\n";
-      var code = "token = "+value_token+"\n";
+      var code = "\nTOKEN = "+value_token+"\n";
       return code +"\n";
     };
     
@@ -203,6 +202,7 @@
           //.appendField(new Blockly.FieldCheckbox("false"), "img");
         this.setInputsInline(false); 
         this.setOutput(true, null);
+
       }
     };
 
@@ -211,9 +211,7 @@
 
       var value_answer = String(Blockly.Python.valueToCode(block, 'answer', Blockly.Python.ORDER_ATOMIC));
       var value_weight = Blockly.Python.valueToCode(block, 'weight', Blockly.Python.ORDER_ATOMIC);
-      
-      if (Blockly.Python.valueToCode(block, 'img', Blockly.Python.ORDER_ATOMIC)!=null)
-      {value_answer+=Blockly.Python.valueToCode(block, 'img', Blockly.Python.ORDER_ATOMIC)}
+     
     //console.log(typeof(value_img));
       // TODO: Assemble Python into code variable.
       var code = Array(value_answer,value_weight);
@@ -318,12 +316,16 @@
     saveConnections: function(containerBlock) {
       var itemBlock = containerBlock.getInputTargetBlock('STACK');
       var i = 0;
+      
       while (itemBlock) {
         var input = this.getInput('Answer' + i);
         itemBlock.valueConnection_ = input && input.connection.targetConnection;
         i++;
+        
+        
         itemBlock = itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
       }
+      CountAnswer = i;
     },
    
     updateShape_: function() {
@@ -332,14 +334,17 @@
       } else if (!this.itemCount_ && !this.getInput('EMPTY')) {
         this.appendDummyInput('EMPTY')
       }
+      
       // Add new inputs.
       for (var i = 0; i < this.itemCount_; i++) {
         if (!this.getInput('Answer' + i)) {
           var input = this.appendValueInput('Answer' + i);
           if (i == 0) {
             input.appendField("Отправит в ответ");
+           
           } else if( i >= 1){
-            input.appendField("или");//??
+            input.appendField("или");
+           
           }
         }
       }
@@ -348,7 +353,7 @@
         this.removeInput('Answer' + i);
         i++;
       }
-      CountAnswer = this.itemCount_;
+      
     }
     }
     //вспомогательный блок мутации
@@ -375,7 +380,7 @@
     };
 
     //обработчик блока ответов с мутацией
-        Blockly.Python['lists_answer'] = function(block){
+     Blockly.Python['lists_answer'] = function(block){
       
       var Array_Answer=[];
       var Array_Weight=[];
@@ -402,12 +407,13 @@
         var text = "text = choices(["+Array_Answer+"],["+Array_Weight+"])[0]\n";
 
       }else{
-         var text ="text = "+ Blockly.Python.valueToCode(block,"Answer"+0,Blockly.Python.ORDER_NONE) +";\n";
+         var text ="text = "+ Blockly.Python.valueToCode(block,"Answer"+0,Blockly.Python.ORDER_NONE) +"\n";
       }
       
       var codereturn = text +"return text\n";
       return codereturn;
     }
+   
    
 
     //вывод кода в правой части экрана
@@ -447,15 +453,16 @@
         if (localStorage.getItem('server_ip')!=null){
             var server_ip = localStorage.getItem('server_ip');
         }
+
+        
         var code = Blockly.Python.workspaceToCode(workspace);
-        var dataStr = "data:text/python;charset=utf-8," +  "from random import choices\n" + encodeURIComponent(code);
+        var dataStr = "data:text/python;charset=utf-8," +  "from random import choices\n\n" + encodeURIComponent(code);
         var downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
         downloadAnchorNode.setAttribute("download", "answer" + ".py");
         document.body.appendChild(downloadAnchorNode); // required for firefox
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
-      
       }
     }
 
