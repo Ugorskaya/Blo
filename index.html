@@ -411,7 +411,8 @@
               Array_Weight.push("0.5");
 
             }else if(element.type=="lists_create_with"){
-               var b = []; 
+               
+              var b = []; 
                for(var c=1;c<=element.itemCount_;c++){
                   console.log(c);
                   b[c-1]=Blockly.Python.valueToCode(element,"ADD"+c,Blockly.Python.ORDER_NONE)||"None";                
