@@ -77,10 +77,7 @@
         trashcan: true //отображение корзины
       }
     );
-
     Blockly.svgResize(workspace); //для фикса ошибки масштабирования
-
-
     //отправка картинки в вк
      Blockly.Blocks['img'] = {
       init: function() {
@@ -91,7 +88,6 @@
         this.setOutput(true, null);
       }
     };
-
     //описание кода отправки картинки
     Blockly.Python['img'] = function(block) {
       var value_url = Blockly.Python.valueToCode(block, 'http', Blockly.Python.ORDER_ATOMIC);
@@ -99,9 +95,7 @@
       var code = "photo_messages(value_url):\n"
       return code;
     };
-
    
-
     //структура события ввода сообщения в вк
     Blockly.Blocks['procedures_answer'] = {
       init: function() {
@@ -134,7 +128,6 @@
       var code = "def answer(message: str):\n" + statements_answer_message_;
       return code;
     };
-
     //блок с переменной вк сообщения
     Blockly.Blocks['input_text1'] = {
       init: function() {
@@ -149,7 +142,6 @@
         //var code_input_text = "event.text" 
         return ["message",Blockly.Python.ORDER_NONE]; 
     }
-
     //блок похожести двух сообщений
     Blockly.Blocks['like'] = {
       init: function() {
@@ -168,7 +160,6 @@
       var val_mes0 = Blockly.Python.valueToCode(block, 'mes0', Blockly.Python.ORDER_ATOMIC);
       return [val_mes1+"=="+val_mes0,Blockly.Python.ORDER_NONE]; 
     } 
-
     //блок поключения к вк
     Blockly.Blocks['vk_api'] = {
       init: function() {
@@ -203,26 +194,19 @@
           //.appendField(new Blockly.FieldCheckbox("false"), "img");
         this.setInputsInline(false); 
         this.setOutput(true, null);
-
       }
     };
-
     //описание блока ответа с весом на питоне
     Blockly.Python['answer_weight'] = function(block) {
-
       var value_answer = String(Blockly.Python.valueToCode(block, 'answer', Blockly.Python.ORDER_ATOMIC));
       var value_weight = Blockly.Python.valueToCode(block, 'weight', Blockly.Python.ORDER_ATOMIC);
      
     //console.log(typeof(value_img));
       // TODO: Assemble Python into code variable.
       var code = Array(value_answer,value_weight);
-
       
       return [code, Blockly.Python.ORDER_ATOMIC]
     };
-
-
-
     //функция вывода ответа с учетом веса(js), тот же принцип используется выше в питоне
     var percentageChance = function(values, chances) {
       var pool = [];
@@ -235,13 +219,10 @@
       //console.log(swap);
       return pool[swap];
     }
-
-
     Blockly.Blocks['lists_answer1'] = {
       init: function() {
         this.setColour(200)
         this.appendValueInput("answer")
-
          .appendField("ответить");
         this.setPreviousStatement(true, null)
         
@@ -250,11 +231,9 @@
     Blockly.Python['lists_answer1'] = function(block){
       var value_answer = Blockly.Python.valueToCode(block, 'answer', Blockly.Python.ORDER_ATOMIC);
       var codereturn = "vk.messages.send(user_id=event.user_id, message="+value_answer+")\n" 
-
       
       return codereturn;
     }
-
     //блок для ответов с мутацией
     //add in category html 
     //<block type="lists_answer"> <mutation items_answer="1"></mutation></mutation></block>
@@ -268,7 +247,6 @@
         //this.setNextStatement(true, null)
         this.setMutator(new Blockly.Mutator(['lists_answer_item']));
       },
-
     mutationToDom() {
       var container = Blockly.utils.xml.createElement('mutation');
       container.setAttribute('items_answer', this.itemCount_);
@@ -368,7 +346,6 @@
     };
     //вспомогательный блок мутации
     Blockly.Blocks['lists_answer_item'] = {
-
       init: function() {
         this.setColour(256)
         this.appendDummyInput()
@@ -379,7 +356,6 @@
         this.contextMenu = false;
       }
     };
-
     //обработчик блока ответов с мутацией
     Blockly.Python['lists_answer'] = function(block){
       
@@ -397,25 +373,21 @@
         else{ array1[i] = "";}
       }
        
-
       if(block.itemCount_>1){
      
         array1.forEach(function(element,i) {
-
           if(array1[i]!=""){
            
             if(element.type=="text" ){
-
               var n = [Blockly.Python.variableDB_.getName(element.getFieldValue('TEXT'), Blockly.Variables.NAME_TYPE),Blockly.Python.ORDER_ATOMIC][0];
               Array_Answer.push("'"+n+"'");
               Array_Weight.push("0.5");
-
             }else if(element.type=="lists_create_with"){
                
               var b = []; 
-               for(var c=1;c<=element.itemCount_;c++){
+               for(var c=0;c<element.itemCount_;c++){
                   console.log(c);
-                  b[c-1]=Blockly.Python.valueToCode(element,"ADD"+c,Blockly.Python.ORDER_NONE)||"None";                
+                  b[c]=Blockly.Python.valueToCode(element,"ADD"+c,Blockly.Python.ORDER_NONE)||"None";                
                 }
                 b=["["+b.join(", ")+"]",Blockly.Python.ORDER_ATOMIC][0];
                 Array_Answer.push(b);
@@ -445,7 +417,6 @@
     }
    
    
-
     //вывод кода в правой части экрана
     function myUpdateFunction(event) {
       var code = Blockly.Python.workspaceToCode(workspace);
@@ -453,7 +424,6 @@
     }
     workspace.addChangeListener(myUpdateFunction);
     document.getElementById('code_area').readOnly = true;
-
     function Save(){
       var result = confirm("Сохранить текущий прогресс?\n Прошлая рабочая область будет удалена");
       if (result){
@@ -464,7 +434,6 @@
       }
       
     }
-
     function Insert(){
       var result = confirm("Восстановить рабочую область из последнего сохранения?\n Текущая рабочая область будет очищена");
       if (result){
@@ -478,12 +447,10 @@
     function Donwload(){
       var result = confirm("Бот готов?\n");
       if (result){
-
      
         if (localStorage.getItem('server_ip')!=null){
             var server_ip = localStorage.getItem('server_ip');
         }
-
         
         var code = Blockly.Python.workspaceToCode(workspace);
         var dataStr = "data:text/python;charset=utf-8," +  "from random import choices\n\n" + encodeURIComponent(code);
@@ -495,10 +462,7 @@
         downloadAnchorNode.remove();
       }
     }
-
     window.onbeforeunload = function() {
       return false;
     };
-
   </script>
-    
