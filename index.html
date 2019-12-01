@@ -379,7 +379,8 @@
           if(array1[i]!=""){
            
             if(element.type=="text" ){
-              var n = [Blockly.Python.variableDB_.getName(element.getFieldValue('TEXT'), Blockly.Variables.NAME_TYPE),Blockly.Python.ORDER_ATOMIC][0];
+              //var n = [Blockly.Python.variableDB_.getName(element.getFieldValue('TEXT'), Blockly.Variables.NAME_TYPE),Blockly.Python.ORDER_ATOMIC][0];
+              var n = [element.getFieldValue('TEXT'), Blockly.Python.ORDER_ATOMIC][0];
               Array_Answer.push("'"+n+"'");
               Array_Weight.push("0.5");
             }else if(element.type=="lists_create_with"){
